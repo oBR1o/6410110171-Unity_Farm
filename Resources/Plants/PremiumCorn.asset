@@ -18,8 +18,8 @@ MonoBehaviour:
   - {fileID: -1907925792, guid: e636ce5bf32b228459c852ee116c14aa, type: 3}
   - {fileID: 1146216986, guid: e636ce5bf32b228459c852ee116c14aa, type: 3}
   - {fileID: 1623139113, guid: e636ce5bf32b228459c852ee116c14aa, type: 3}
-  timeBtwStage: 15
-  buyPrice: 120
-  sellPrice: 220
+  timeBtwStage: 20
+  buyPrice: 200
+  sellPrice: 300
   icon: {fileID: -119421811, guid: da8685ac61ac20a40941ac37269ce9c7, type: 3}
   dryPlanted: {fileID: -1943473730, guid: 4e481af3a1f99e24fa1a6a8b1293ca94, type: 3}

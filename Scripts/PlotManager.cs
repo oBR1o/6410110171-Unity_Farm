@@ -12,6 +12,7 @@ public class Ploting : MonoBehaviour
     public Color availableColor = Color.green;
     public Color unavailableColor = Color.red;
 
+    SpriteRenderer coin;
     SpriteRenderer plot;
     PlantObjectScripts selectedPlant;
     FarmManager fm;
@@ -23,9 +24,12 @@ public class Ploting : MonoBehaviour
 
     float speed = 1f;
     public bool isBought = true;
+    bool isCoin = false;
+    float coinTimer;
     void Start()
     {
         plant = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        coin = transform.GetChild(1).GetComponent<SpriteRenderer>();
         plantCollider = transform.GetChild(0).GetComponent<BoxCollider2D>();
         fm = transform.parent.GetComponent<FarmManager>();
         mhc = FindObjectOfType<MouseHoldClick>();
@@ -53,6 +57,14 @@ public class Ploting : MonoBehaviour
                 UpdatePlant();
             }
         }
+        if(isCoin)
+        {
+            coinTimer -= Time.deltaTime;
+            if(coinTimer <0 ){
+                coin.gameObject.SetActive(false);
+                isCoin = false;
+            }
+        }
     }
     private void OnMouseDown()
     {
@@ -60,10 +72,10 @@ public class Ploting : MonoBehaviour
         {
             if(plantStage == selectedPlant.plantStages.Length -1 && !fm.isPlanting && !fm.isSelecting)
             {
-            
+                
             }
         }
-        else if(fm.isPlanting && fm.selectPlant.plant.buyPrice <= fm.money && isBought)
+        else if(fm.isPlanting && fm.selectPlant.plant.buyPrice <= fm.money && isBought && !isCoin)
         {
             Plant(fm.selectPlant.plant);
         }
@@ -87,9 +99,9 @@ public class Ploting : MonoBehaviour
                     }
                     break;
                 case 3:
-                    if(fm.money >= 100 && !isBought)
+                    if(fm.money >= 400 && !isBought)
                     {
-                        fm.Transaction(-100);
+                        fm.Transaction(-400);
                         isBought = true;
                         plot.sprite = drySprite;
                     }
@@ -107,13 +119,16 @@ public class Ploting : MonoBehaviour
                     break;
             }
         }
+        if(isCoin && !fm.isSelecting && !fm.isPlanting){
+            GetCoin();
+        }
 
     }
     private void OnMouseOver() 
     {
         if(fm.isPlanting)
         {
-            if(isPlanted || fm.selectPlant.plant.buyPrice > fm.money || !isBought)
+            if(isPlanted || fm.selectPlant.plant.buyPrice > fm.money || !isBought || isCoin)
             {
                 //can't buy
                 plot.color = unavailableColor;
@@ -185,6 +200,11 @@ public class Ploting : MonoBehaviour
                     break;
             }
         }
+        if(isCoin && !fm.isSelecting && !fm.isPlanting && mhc.isMouseHold){
+            GetCoin();
+        }
+
+        
     }
 
     private void OnMouseExit() 
@@ -195,13 +215,15 @@ public class Ploting : MonoBehaviour
     {
         isPlanted = false;
         plant.gameObject.SetActive(false);
-        fm.Transaction(+selectedPlant.sellPrice);
+        coin.gameObject.SetActive(true);
+        coinTimer = 10f;
+        isCoin = true;
         isDry = true;
         plot.sprite = drySprite;
         speed = 1f;
     }
     void Plant(PlantObjectScripts newPlant)
-    {
+    {   
         selectedPlant = newPlant;
         isPlanted = true;
 
@@ -224,5 +246,12 @@ public class Ploting : MonoBehaviour
         }
         plantCollider.size = plant.sprite.bounds.size;
         plantCollider.offset = new Vector2(0,plant.bounds.size.y/2);
+    }
+
+    void GetCoin()
+    {
+        isCoin = false;
+        coin.gameObject.SetActive(false);
+        fm.Transaction(+selectedPlant.sellPrice);
     }
 }

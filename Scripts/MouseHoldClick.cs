@@ -16,16 +16,14 @@ public class MouseHoldClick : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if(fm.isPlanting|| fm.isSelecting)
+        if(Input.GetMouseButtonDown(0))
         {
-            if(Input.GetMouseButtonDown(0))
-            {
-                isMouseHold = true;
-            }
-            if(Input.GetMouseButtonUp(0))
-            {
-                isMouseHold = false;
-            }
+            isMouseHold = true;
         }
+            if(Input.GetMouseButtonUp(0))
+        {
+            isMouseHold = false;
+        }
+        
     }
 }
